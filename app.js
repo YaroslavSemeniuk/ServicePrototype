@@ -1,23 +1,19 @@
 const express = require('express');
+const session = require('express-session');
 const passport = require('passport');
-const cors = require('cors');
-const { bearerStrategy } = require('./config');
-const azureAuthRouter = require('./routes');
+
+const { env } = require('./src/env');
+const azureAuthRouter = require('./src/routes');
 
 const app = express();
 app.use(express.json());
 
-//enable CORS (for testing only -remove in production/deployment)
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Authorization, Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
+app.use(session(env.sessionConfig));
 
 app.use(passport.initialize());
-passport.use('oauth-bearer', bearerStrategy);
+passport.use('oauth-bearer', env.bearerStrategy);
 
-app.use('/api', azureAuthRouter);
+app.use('/auth', azureAuthRouter);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log('Listening on port: ', port));

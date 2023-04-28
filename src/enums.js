@@ -7,3 +7,8 @@ export enum UserRoles {
   PLANNER = 'planner',
   SCANNER = 'scanner',
 }
+
+export enum AuthorityType {
+  AD = 'AD',
+  B2C = 'B2C',
+}
